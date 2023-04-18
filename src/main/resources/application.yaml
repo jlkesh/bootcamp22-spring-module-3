@@ -15,5 +15,16 @@ server:
   port: 9090
 comments:
   service:
-    base.url: 'http://localhost:8080/api/comments'
-
+    baseUrl: 'http://localhost:8080/api/comments'
+    commentsForPost: ${comments.service.baseUrl}/{0}/post
+    saveComments: ${comments.service.baseUrl}/list
+logging:
+  level:
+    root: info
+    org:
+      zalando:
+        logbook: TRACE
+logbook:
+  exclude:
+    - '/api/upload'
+    - '/api/download'
