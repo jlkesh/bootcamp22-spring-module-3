@@ -1,6 +1,6 @@
 package dev.jlkeesh.springadvanced.post;
 
-import org.springframework.http.ResponseEntity;
+import dev.jlkeesh.springadvanced.post.client.CommentServiceClient;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -44,6 +44,7 @@ public class PostService {
                 post.getBody(),
                 comments
         );
+
     }
 }
 
