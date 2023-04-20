@@ -1,1 +1,0 @@
-alter table task rename to tasks;
