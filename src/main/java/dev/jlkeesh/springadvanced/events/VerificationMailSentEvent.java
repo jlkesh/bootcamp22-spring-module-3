@@ -8,6 +8,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public final class VerificationMailSentEvent {
+    private final Integer id;
     private final String otp;
     private final String email;
 }

@@ -38,13 +38,13 @@ public class UserEventListener {
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             tokenGenerator.generateToken(user);
-            return CompletableFuture.completedFuture(new VerificationMailSentEvent(user.getOtp(), user.getEmail()));
+            return CompletableFuture.completedFuture(new VerificationMailSentEvent(user.getId(), user.getOtp(), user.getEmail()));
         }
         return null;
     }
 
     /*@Order(2)*/
-    @EventListener(value = VerificationMailSentEvent.class ,condition = "#event.email ne null")
+    @EventListener(value = VerificationMailSentEvent.class, condition = "#event.email ne null")
     public void sendVerificationEmail(VerificationMailSentEvent event) {
         log.info("Ticked sendVerificationEmail with : {}", event);
         Map<String, Object> model = Map.of("otp", event.getOtp(), "email", event.getEmail());
