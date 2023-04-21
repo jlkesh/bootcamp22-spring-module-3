@@ -1,5 +1,8 @@
 package dev.jlkeesh.springadvanced;
 
+import dev.jlkeesh.springadvanced.cache.CacheManager;
+import dev.jlkeesh.springadvanced.cache.CacheManagerImpl;
+import dev.jlkeesh.springadvanced.cache.CustomCacheManager;
 import dev.jlkeesh.springadvanced.user.User;
 import dev.jlkeesh.springadvanced.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +11,8 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
@@ -35,5 +40,10 @@ public class SpringadvancedApplication {
         };
     }
 
+
+    /*@Bean
+    public CacheManager customCacheManager() {
+        return new CustomCacheManager();
+    }*/
 
 }

@@ -1,8 +1,5 @@
 package dev.jlkeesh.springadvanced.cache;
 
-import java.util.Objects;
-import java.util.concurrent.ConcurrentHashMap;
-
 public class CacheUtils {
 
     public static String getCacheName(Object o) {
@@ -21,18 +18,5 @@ public class CacheUtils {
             throw new RuntimeException("Class [%s] Not Annotated With [%s] Annotation"
                     .formatted(clazz.getName(), CacheIt.class.getName()));
         return cacheIt.expiresIn();
-    }
-
-
-    @SuppressWarnings("unchecked")
-    public static synchronized <T> Cache<T> getCache(ConcurrentHashMap<String, Cache<?>> caches, Object o) {
-        String cacheName = getCacheName(o);
-        int cacheExpiry = getCacheExpiry(o);
-        Cache<?> cache = caches.get(cacheName);
-        if (Objects.isNull(cache)) {
-            cache = new Cache<>(cacheName, cacheExpiry);
-            caches.put(cacheName, cache);
-        }
-        return (Cache<T>) cache;
     }
 }

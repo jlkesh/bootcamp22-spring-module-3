@@ -1,22 +1,24 @@
 package dev.jlkeesh.springadvanced.cache;
 
-import org.springframework.stereotype.Component;
+import jakarta.annotation.PostConstruct;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-@Component
-public class CacheManager {
+public interface CacheManager {
+    ConcurrentHashMap<String, Cache<?>> CACHES = new ConcurrentHashMap<>();
+     void register();
 
-    private final ConcurrentHashMap<String, Cache<?>> caches = new ConcurrentHashMap<>();
-
-    public <T> Cache<T> getCache(Object o) {
-        return CacheUtils.getCache(caches, o);
+    @SuppressWarnings("unchecked")
+    default <T> Cache<T> getCache(Object o) {
+        String cacheName = CacheUtils.getCacheName(o);
+        Cache<?> cache = CACHES.get(cacheName);
+        if (cache == null)
+            throw new RuntimeException("Cache Not Found With NAME : " + cacheName);
+        return (Cache<T>) cache;
     }
 
 
-    public <T> void putCache(String cacheName, Cache<T> cache) {
-        caches.put(cacheName, cache);
+    default  <T> void putCache(String cacheName, Cache<T> cache) {
+        CACHES.put(cacheName, cache);
     }
-
-
 }

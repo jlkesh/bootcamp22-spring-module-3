@@ -5,8 +5,6 @@ import dev.jlkeesh.springadvanced.cache.CacheIt;
 import dev.jlkeesh.springadvanced.cache.CacheManager;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.DependsOn;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
@@ -16,14 +14,11 @@ import java.util.concurrent.TimeUnit;
 @CacheIt(name = "users", expiresIn = 2 * 60)
 public class UserService {
     private final UserRepository userRepository;
-    private final CacheManager cacheManager;
     private final Cache<User> cache;
 
-    @Lazy
     public UserService(UserRepository userRepository,
                        CacheManager cacheManager) {
         this.userRepository = userRepository;
-        this.cacheManager = cacheManager;
         this.cache = cacheManager.getCache(this);
     }
 
@@ -41,7 +36,9 @@ public class UserService {
         log.info("Getting User With ID : {}", id);
         User user = userRepository
                 .findById(id)
-                .orElse(new User());// 2s
+                .orElseThrow(() ->
+                        new RuntimeException("User not found"));
+
         try {
             TimeUnit.SECONDS.sleep(2);
         } catch (Exception ignored) {
