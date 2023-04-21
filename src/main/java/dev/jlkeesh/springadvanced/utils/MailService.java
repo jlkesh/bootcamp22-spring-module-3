@@ -30,4 +30,8 @@ public class MailService {
         this.on = !this.on;
         return this.on;
     }
+
+    public boolean getStatus() {
+        return on;
+    }
 }

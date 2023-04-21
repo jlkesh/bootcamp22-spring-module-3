@@ -47,7 +47,10 @@ public class UserEventListener {
     @EventListener(value = VerificationMailSentEvent.class, condition = "#event.email ne null")
     public void sendVerificationEmail(VerificationMailSentEvent event) {
         log.info("Ticked sendVerificationEmail with : {}", event);
-        Map<String, Object> model = Map.of("otp", event.getOtp(), "email", event.getEmail());
+        Map<String, Object> model = Map.of(
+                "id", event.getId(),
+                "otp", event.getOtp(),
+                "email", event.getEmail());
         mailService.sendEmail(model);
     }
 
