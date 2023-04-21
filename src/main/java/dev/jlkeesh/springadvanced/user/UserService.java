@@ -1,25 +1,25 @@
 package dev.jlkeesh.springadvanced.user;
 
-import dev.jlkeesh.springadvanced.cache.Cache;
-import dev.jlkeesh.springadvanced.cache.CacheIt;
-import dev.jlkeesh.springadvanced.cache.CacheManager;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.Cache;
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
-@CacheIt(name = "users", expiresIn = 2 * 60)
 public class UserService {
     private final UserRepository userRepository;
-    private final Cache<User> cache;
+    private final ConcurrentMapCacheManager concurrentMapCacheManager;
+    private final Cache cache;
 
     public UserService(UserRepository userRepository,
-                       CacheManager cacheManager) {
+                       ConcurrentMapCacheManager concurrentMapCacheManager) {
         this.userRepository = userRepository;
-        this.cache = cacheManager.getCache(this);
+        this.concurrentMapCacheManager = concurrentMapCacheManager;
+        this.cache = concurrentMapCacheManager.getCache("users");
     }
 
 
@@ -29,7 +29,7 @@ public class UserService {
     }
 
     public User get(@NonNull Integer id) {
-        User cachedUser = cache.get(id);
+        User cachedUser = cache.get(id, User.class);
         if (cachedUser != null)
             return cachedUser;
 

@@ -1,8 +1,5 @@
 package dev.jlkeesh.springadvanced;
 
-import dev.jlkeesh.springadvanced.cache.CacheManager;
-import dev.jlkeesh.springadvanced.cache.CacheManagerImpl;
-import dev.jlkeesh.springadvanced.cache.CustomCacheManager;
 import dev.jlkeesh.springadvanced.user.User;
 import dev.jlkeesh.springadvanced.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -10,11 +7,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
+
+import java.util.List;
 
 @Slf4j
 @EnableAsync
@@ -30,7 +28,7 @@ public class SpringadvancedApplication {
     }
 
 
-    @Bean(name = "applicationRunner")
+    @Bean
     ApplicationRunner runner() {
         return (args) -> {
             userRepository.save(User.builder().email("Elshod@mail.ru").username("elshod")
@@ -40,10 +38,12 @@ public class SpringadvancedApplication {
         };
     }
 
+    @Bean
+    public ConcurrentMapCacheManager concurrentMapCacheManager(){
+        ConcurrentMapCacheManager concurrentMapCacheManager = new ConcurrentMapCacheManager();
+        concurrentMapCacheManager.setCacheNames(List.of("users"));
+        return concurrentMapCacheManager;
+    }
 
-    /*@Bean
-    public CacheManager customCacheManager() {
-        return new CustomCacheManager();
-    }*/
 
 }

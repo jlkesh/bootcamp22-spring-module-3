@@ -1,6 +1,5 @@
 package dev.jlkeesh.springadvanced.user;
 
-import dev.jlkeesh.springadvanced.cache.CacheManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
-    private final CacheManager cacheManager;
 
 
     @PostMapping
@@ -36,8 +34,4 @@ public class UserController {
     }
 
 
-    @GetMapping("/monitor-cache")
-    public CacheManager cacheManager() {
-        return cacheManager;
-    }
 }
