@@ -14,8 +14,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = true)
-public class UserCreateDto implements Serializable {
+public class UserUpdateDTO implements Serializable {
     private String email;
     private String username;
-    private String password;
 }

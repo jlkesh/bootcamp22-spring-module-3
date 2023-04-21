@@ -1,27 +1,33 @@
 package dev.jlkeesh.springadvanced.utils;
 
-import lombok.Getter;
+import dev.jlkeesh.springadvanced.user.User;
+import dev.jlkeesh.springadvanced.user.UserUpdateDTO;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class CacheService {
 
-    @Getter
-    private final ConcurrentHashMap<Object, Object> cache = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<Integer, User> cache = new ConcurrentHashMap<>();
 
-
-    public Object get(Object key) {
+    public User get(Integer key) {
         return cache.get(key);
     }
 
-    public Object put(Object key, Map<String, Object> model) {
-        System.out.println(cache);
-        Object put =  cache.put(key, model);
-        return put;
+    public void put(User user) {
+        cache.put(user.getId(), user);
     }
 
+    public void evict(Integer key) {
+        cache.remove(key);
+    }
 
+    public void put(Integer id, UserUpdateDTO dto) {
+        User user = cache.get(id);
+        if (user != null) {
+            user.setEmail(dto.getEmail());
+            user.setUsername(dto.getUsername());
+        }
+    }
 }

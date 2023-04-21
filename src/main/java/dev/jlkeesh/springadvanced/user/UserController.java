@@ -1,50 +1,34 @@
 package dev.jlkeesh.springadvanced.user;
 
-import dev.jlkeesh.springadvanced.events.UserCreatedEvent;
-import dev.jlkeesh.springadvanced.utils.CacheService;
-import dev.jlkeesh.springadvanced.utils.MailService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @RestController
 @RequestMapping("/api/user")
 @RequiredArgsConstructor
 public class UserController {
-    private final UserMapper userMapper;
-    private final UserRepository userRepository;
-    private final ApplicationEventPublisher publisher;
-    private final MailService mailService;
-    private final CacheService cacheService;
+
+    private final UserService userService;
+
 
 
     @PostMapping
-    @Transactional
-    public User create(@RequestBody UserCreateDto dto) {
-        User user = userMapper.toEntity(dto);
-        userRepository.save(user);
-        publisher.publishEvent(new UserCreatedEvent(user.getId()));
-        return user;
+    public User create(@RequestBody User user) {
+        return userService.create(user);
     }
-
-
-    @GetMapping("turnOnOrTurnOffSMTPServer")
-    public ResponseEntity<Boolean> turnOnOrTurnOffSMTPServer() {
-        return ResponseEntity.ok(mailService.turnOnOrTurnOffSMTPServer());
+    @GetMapping("/{id}")
+    public User get(@PathVariable Integer id) {
+        return userService.get(id);
     }
-
-    @GetMapping("/view-cache")
-    public ResponseEntity<ConcurrentHashMap<Object, Object>> viewCache() {
-        log.info("Cache  : {}", cacheService.getCache());
-        return ResponseEntity.ok(cacheService.getCache());
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Integer id) {
+         userService.delete(id);
     }
-
+    @PutMapping("/{id}")
+    public void update(@PathVariable Integer id,@RequestBody UserUpdateDTO dto) {
+         userService.update(id, dto);
+    }
 
 }
