@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/api/user")
@@ -14,13 +16,17 @@ public class UserController {
 
 
     @PostMapping
-    public User create(@RequestBody User user) {
+    public Users create(@RequestBody Users user) {
         return userService.create(user);
     }
 
     @GetMapping("/{id}")
-    public User get(@PathVariable Integer id) {
+    public Users get(@PathVariable Integer id) {
         return userService.get(id);
+    }
+    @GetMapping
+    public List<Users> getAll() {
+        return userService.getAll();
     }
 
     @DeleteMapping("/{id}")
@@ -29,7 +35,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public User update(@PathVariable Integer id, @RequestBody UserUpdateDTO dto) {
+    public Users update(@PathVariable Integer id, @RequestBody UserUpdateDTO dto) {
         return userService.update(id, dto);
     }
 

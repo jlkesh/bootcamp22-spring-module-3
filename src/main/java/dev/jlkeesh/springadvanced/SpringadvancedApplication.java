@@ -1,29 +1,33 @@
 package dev.jlkeesh.springadvanced;
 
-import dev.jlkeesh.springadvanced.user.User;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.jlkeesh.springadvanced.user.UserRepository;
+import dev.jlkeesh.springadvanced.user.Users;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Primary;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 
-import java.util.concurrent.TimeUnit;
+import javax.cache.CacheManager;
+import javax.cache.Caching;
+import javax.cache.spi.CachingProvider;
+import java.net.URL;
+import java.util.List;
 
-@Slf4j
 @EnableAsync
 @SpringBootApplication
 @RequiredArgsConstructor
 @EnableScheduling
 @EnableCaching
 public class SpringadvancedApplication {
-    private final UserRepository userRepository;
 
 
     public static void main(String[] args) {
@@ -32,19 +36,20 @@ public class SpringadvancedApplication {
 
 
     @Bean
-    ApplicationRunner runner() {
+    ApplicationRunner runner(@Lazy UserRepository userRepository, ObjectMapper objectMapper) {
         return (args) -> {
-            userRepository.save(User.builder().email("Elshod@mail.ru").username("elshod")
-                    .password("q123")
-                    .otp("2q4rfldjvnskf.d")
-                    .build());
+            var url = new URL("https://jsonplaceholder.typicode.com/users");
+            List<Users> users = objectMapper.readValue(url, new TypeReference<List<Users>>() {
+            });
+            userRepository.saveAll(users);
         };
     }
 
-    @Scheduled(initialDelay = 5, fixedDelay = 10, timeUnit = TimeUnit.SECONDS)
-    @CacheEvict(cacheNames = "users", allEntries = true)
-    public void killUsersCacheEntries() {
-        log.info("Killing All Entries Of Users Cache");
+
+    @Bean
+    public CacheManager cacheManager() throws Exception {
+        CachingProvider cachingProvider = Caching.getCachingProvider();
+        return cachingProvider.getCacheManager(new ClassPathResource("classpath:ehcache.xml").getURI(), getClass().getClassLoader());
     }
 
 

@@ -1,13 +1,19 @@
 spring:
+  main:
+    allow-bean-definition-overriding: true
+  cache:
+    jcache:
+      config: classpath:ehcache.xml
   datasource:
     driver-class-name: org.h2.Driver
     url: jdbc:h2:mem:~
     username: sa
     password: sa
   jpa:
-    show-sql: false
+    show-sql: true
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
         format_sql: true
+
