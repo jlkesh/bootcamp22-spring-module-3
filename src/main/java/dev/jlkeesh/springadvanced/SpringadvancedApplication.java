@@ -1,7 +1,9 @@
 package dev.jlkeesh.springadvanced;
 
-import dev.jlkeesh.springadvanced.user.User;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.jlkeesh.springadvanced.user.UserRepository;
+import dev.jlkeesh.springadvanced.user.Users;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationRunner;
@@ -14,6 +16,8 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import java.net.URL;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -32,20 +36,20 @@ public class SpringadvancedApplication {
 
 
     @Bean
-    ApplicationRunner runner() {
+    ApplicationRunner runner(ObjectMapper objectMapper) {
         return (args) -> {
-            userRepository.save(User.builder().email("Elshod@mail.ru").username("elshod")
-                    .password("q123")
-                    .otp("2q4rfldjvnskf.d")
-                    .build());
+            URL url = new URL("https://jsonplaceholder.typicode.com/users");
+            List<Users> users = objectMapper.readValue(url, new TypeReference<>() {
+            });
+            userRepository.saveAll(users);
         };
     }
 
-    @Scheduled(initialDelay = 5, fixedDelay = 10, timeUnit = TimeUnit.SECONDS)
+/*    @Scheduled(initialDelay = 5, fixedDelay = 10, timeUnit = TimeUnit.SECONDS)
     @CacheEvict(cacheNames = "users", allEntries = true)
     public void killUsersCacheEntries() {
         log.info("Killing All Entries Of Users Cache");
-    }
+    }*/
 
 
 }
