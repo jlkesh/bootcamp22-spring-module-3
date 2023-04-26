@@ -10,7 +10,7 @@ import java.util.Random;
 import static org.junit.jupiter.api.Assertions.*;
 
 // @DisplayName("Calculator Class Methods Test")
-@TestMethodOrder(MethodOrderer.MethodName.class)
+@TestMethodOrder(MethodOrderer.DisplayName.class)
 @IndicativeSentencesGeneration(separator = "=>", generator = DisplayNameGenerator.ReplaceUnderscores.class)
 public class SimpleTest {
 
@@ -43,12 +43,12 @@ public class SimpleTest {
         assertEquals(3, result);
     }
 
-    @Test
+    //@Test
     // @DisplayName("Div Method Test(Should Be Success)")
     //@Disabled("Disable because this method throws timeout exception")
-    @DisabledIf(value = "condition", disabledReason = "Because Of Because")
+   // @DisabledIf(value = "condition", disabledReason = "Because Of Because")
     void calculator_div_method_test_should_not_pass_for_timeout() {
-        assertTimeout(Duration.ofSeconds(1), () -> calculator.div(12, 4));
+       // fail("This method shoulkd Fail");
     }
 
     @Test

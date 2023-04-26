@@ -4,10 +4,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.time.temporal.ChronoUnit;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,14 +41,19 @@ class CalculatorParameterizedTest {
     }
 
 
-    @ParameterizedTest
-    @CsvSource({
-            "a,  12",
-            "b,  3",
-            "sum, 15",
-            "div, 4"
-    })
+    @ParameterizedTest(name = "{index} - {arguments}")
+    @CsvSource(value = {
+            "a , b , sum, div",
+            "8, 4, 12, 2",
+            "12, 4, 16, 3"
+    }, useHeadersInDisplayName = true)
     void testWithCsvSource(int a, int b, int sum, int div) {
+        assertEquals(sum, calculator.add(a, b));
+        assertEquals(div, calculator.div(a, b));
+    }
+    @ParameterizedTest(name = "{index} - {arguments}")
+    @CsvFileSource(resources = "/calc.csv", useHeadersInDisplayName = true)
+    void testWithCsvFileSource(int a, int b, int sum, int div) {
         assertEquals(sum, calculator.add(a, b));
         assertEquals(div, calculator.div(a, b));
     }
