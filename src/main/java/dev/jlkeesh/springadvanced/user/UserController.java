@@ -1,12 +1,14 @@
 package dev.jlkeesh.springadvanced.user;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -14,11 +16,12 @@ public class UserController {
 
 
     @PostMapping
-    public User create(@RequestBody User user) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public User create(@Valid @RequestBody User user) {
         return userService.create(user);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping(value = "/{id}")
     public User get(@PathVariable Integer id) {
         return userService.get(id);
     }

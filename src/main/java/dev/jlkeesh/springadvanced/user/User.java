@@ -1,6 +1,7 @@
 package dev.jlkeesh.springadvanced.user;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Getter
@@ -15,7 +16,10 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    @NotBlank
     private String email;
+    @NotBlank
     private String username;
     private String password;
     private String otp;
