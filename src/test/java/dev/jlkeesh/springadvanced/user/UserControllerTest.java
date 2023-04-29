@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserControllerTest {
 
     @MockBean
-    UserService userService;
+    UserServiceImpl userServiceImpl;
 
     /*
     @MockBean
@@ -50,7 +50,7 @@ class UserControllerTest {
                 .password("123")
                 .build();
 
-        when(userService.create(any())).thenReturn(user);
+        when(userServiceImpl.create(any())).thenReturn(user);
         MvcResult mvcResult = mockMvc.perform(post("/api/users")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(user))
@@ -62,7 +62,7 @@ class UserControllerTest {
         String contentString = mvcResult.getResponse().getContentAsString();
         log.info(contentString);
         assertThat(contentString).containsIgnoringCase("choychi");
-        verify(userService, atLeastOnce()).create(any());
+        verify(userServiceImpl, atLeastOnce()).create(any());
     }
 
     @Test
@@ -85,7 +85,7 @@ class UserControllerTest {
 
     @Test
     void getUser() throws Exception {
-        when(userService.get(anyInt())).thenReturn(User.builder().id(1).build());
+        when(userServiceImpl.get(anyInt())).thenReturn(User.builder().id(1).build());
         MvcResult mvcResult = mockMvc.perform(get("/api/users/{userId}", 1)
                         .contentType("application/json"))
                 .andExpect(status().is(200))
@@ -94,7 +94,7 @@ class UserControllerTest {
         String contentAsString = response.getContentAsString();
         User user = objectMapper.readValue(contentAsString, User.class);
         assertThat(user.getId()).isEqualTo(1);
-        verify(userService, atLeastOnce()).get(anyInt());
+        verify(userServiceImpl, atLeastOnce()).get(anyInt());
 
     }
 
