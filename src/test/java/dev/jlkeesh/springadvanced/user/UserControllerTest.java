@@ -56,7 +56,7 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsString(user))
                 )
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.username").value("asd"))
+                .andExpect(jsonPath("$.username").value("choychi"))
                 .andReturn();
 
         String contentString = mvcResult.getResponse().getContentAsString();

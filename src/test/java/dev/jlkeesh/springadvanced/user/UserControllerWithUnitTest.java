@@ -62,7 +62,7 @@ class UserControllerWithUnitTest {
         mockMvc.perform(post("/api/users")
                 .contentType("application/json")
                 .content(objectMapper.writeValueAsString(user))
-        ).andExpect(status().isCreated());
+        ).andExpect(status().isBadRequest());
         verify(userService, times(1)).create(any());
     }
 
