@@ -17,9 +17,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @NotBlank
+    @NotBlank(message = "email can not be blank")
     private String email;
-    @NotBlank
+    @NotBlank(message = "username can not be blank")
     private String username;
     private String password;
     private String otp;

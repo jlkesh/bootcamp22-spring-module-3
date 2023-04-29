@@ -1,18 +1,17 @@
 package dev.jlkeesh.springadvanced.user;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -23,7 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 /*@ExtendWith(MockitoExtension.class)*/
-@WebMvcTest
+@WebMvcTest(controllers = UserController.class)
 class UserControllerWithUnitTest {
 
     @Autowired
@@ -124,6 +123,31 @@ class UserControllerWithUnitTest {
         String contentAsString = response.getContentAsString();
         User user1 = objectMapper.readValue(contentAsString, User.class);
         assertEquals(1, user1.getId());
+    }
+
+    @Test
+    void testCreateApiForBadRequest() throws Exception {
+        User user = User.builder()
+                /*.email("choy@mail.ru")*/
+                .otp("123")
+                .password("123")
+                /*.username("choy")*/
+                .build();
+        MvcResult mvcResult = mockMvc.perform(post("/api/users")
+                        .contentType("application/json")
+                        .content(objectMapper.writeValueAsString(user))
+                ).andExpect(status().isBadRequest())
+                /*.andExpect(jsonPath("$.errorMessage").hasJsonPath())
+                .andExpect(jsonPath("$.errorMessage.email").value("email can not be blank"))
+                .andExpect(jsonPath("$.errorMessage.username").value("username can not be blank"))
+                .andExpect(jsonPath("$.errorPath").value("/api/users"));*/
+                .andReturn();
+        String contentAsString = mvcResult.getResponse().getContentAsString();
+        Map<String, Object> errorDTO = objectMapper.readValue(contentAsString, new TypeReference<>() {
+        });
+        @SuppressWarnings("unchecked")
+        Map<String, String> errorMessage = (Map<String, String>) errorDTO.get("errorMessage");
+        assertEquals("email can not be blank", errorMessage.get("email"));
     }
 
     @Test
