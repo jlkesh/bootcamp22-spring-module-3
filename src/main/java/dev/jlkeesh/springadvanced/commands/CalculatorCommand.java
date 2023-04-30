@@ -3,12 +3,8 @@ package dev.jlkeesh.springadvanced.commands;
 import dev.jlkeesh.springadvanced.annotation.NotEquals;
 import dev.jlkeesh.springadvanced.service.CalculatorService;
 import jakarta.validation.ConstraintViolation;
-import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.sql.ast.tree.expression.Collation;
-import org.springframework.context.annotation.Bean;
 import org.springframework.shell.Availability;
-import org.springframework.shell.CommandNotCurrentlyAvailable;
 import org.springframework.shell.ParameterValidationException;
 import org.springframework.shell.command.CommandHandlingResult;
 import org.springframework.shell.command.annotation.ExceptionResolver;
@@ -18,7 +14,6 @@ import org.springframework.shell.standard.ShellMethodAvailability;
 import org.springframework.shell.standard.ShellOption;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.Set;
 import java.util.StringJoiner;
 
