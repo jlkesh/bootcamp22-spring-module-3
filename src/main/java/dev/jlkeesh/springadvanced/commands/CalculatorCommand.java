@@ -6,6 +6,7 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.sql.ast.tree.expression.Collation;
+import org.springframework.context.annotation.Bean;
 import org.springframework.shell.Availability;
 import org.springframework.shell.CommandNotCurrentlyAvailable;
 import org.springframework.shell.ParameterValidationException;
@@ -13,6 +14,7 @@ import org.springframework.shell.command.CommandHandlingResult;
 import org.springframework.shell.command.annotation.ExceptionResolver;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellMethodAvailability;
 import org.springframework.shell.standard.ShellOption;
 
 import java.util.Arrays;
@@ -62,14 +64,13 @@ public class CalculatorCommand {
         return "Successfully signed out";
     }
 
-
-    @ExceptionResolver(CommandNotCurrentlyAvailable.class)
-    CommandHandlingResult handleCommandNotAvailable(CommandNotCurrentlyAvailable e) {
-        String message = e.getMessage();
-        return CommandHandlingResult.of(message, 401);
+    @ShellMethod
+    public String createTodo() {
+        return "Successfully created";
     }
 
-    public Availability logoutAvailability() {
+    @ShellMethodAvailability({"logout", "create-todo"})
+    public Availability availabilityLogout() {
         return connected ? Availability.available() : Availability.unavailable("Sign in first");
     }
 
