@@ -22,6 +22,6 @@ public class SpringadvancedApplication {
 class CustomPromptProvider implements PromptProvider {
     @Override
     public AttributedString getPrompt() {
-        return new AttributedString("bootcamp-shell" + "-->", AttributedStyle.DEFAULT.background(AttributedStyle.CYAN));
+        return new AttributedString("bootcamp-shell" + "-->", AttributedStyle.BOLD.background(AttributedStyle.CYAN));
     }
 }
